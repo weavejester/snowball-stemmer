@@ -38,6 +38,13 @@
   (and (ends-with? word short-syllable)
        (str/blank? (re-find (r1 word)))))
 
+(defn replace-longest-if [pred word & rules]
+  (apply replace-longest word
+    (mapcat
+     (fn [[re replacement]]
+       [re #(if (in-r1? word re) replacement %)])
+     (partition 2 rules))))
+
 (defn step-0 [word]
   (str/replace word #"('s'|'s|')$" ""))
 
@@ -65,3 +72,32 @@
 
 (defn step-1c [word]
   (str/replace word (pattern "(?<=^.+" non-vowel ")[yY]$") "i"))
+
+(defn step-2 [word]
+  (replace-longest-if in-r1? word
+    #"tional$"              "tion"
+    #"enci$"                "ence"
+    #"anci$"                "ance"
+    #"abli$"                "able"
+    #"entli$"               "ent"
+    #"iz(er|ation)$"        "ize"
+    #"at(ion|ional|or)$"    "ate"
+    #"al(ism|iti|li)$"      "al"
+    #"fulness$"             "ful"
+    #"ous(li|ness)$"        "ous"
+    #"iv(eness|iti)$"       "ive"
+    #"(biliti|bli)$"        "ble"
+    #"logi$"                "log"
+    #"fulli$"               "ful"
+    #"lessli$"              "less"
+    #"(?<=[cdeghkmnrt])li$" ""))
+
+(defn stem [word]
+  (-> word
+      (str/replace #"^'" "")
+      (str/replace #"^y|(?<=[aeiouy]y)" "Y")
+      step-0
+      step-1a
+      step-1b
+      step-1c
+      step-2))
