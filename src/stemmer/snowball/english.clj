@@ -62,3 +62,6 @@
            (ends-with? preceed double-letter) ""
            (short? preceed) (str last-letter "e")
            :else last-letter))))))
+
+(defn step-1c [word]
+  (str/replace word (pattern "(?<=^.+" non-vowel ")[yY]$") "i"))
