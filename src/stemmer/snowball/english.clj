@@ -53,13 +53,18 @@
   (and (ends-with? word short-syllable)
        (str/blank? (:string (r1 word)))))
 
+(defn full-match [match]
+  (if (string? match)
+    match
+    (first match)))
+
 (defn replace-longest-if [pred word & rules]
   (apply replace-longest word
     (mapcat
      (fn [[re replacement]]
        (if (fn? replacement)
-         [re #(if (pred word re) (replacement %) %)]
-         [re #(if (pred word re) replacement %)]))
+         [re #(if (pred word re) (replacement %) (full-match %))]
+         [re #(if (pred word re) replacement (full-match %))]))
      (partition 2 rules))))
 
 (defn step-0 [word]
@@ -125,6 +130,13 @@
     #"(?<=[st])ion"
     ""))
 
+(defn step-5 [word]
+  (cond
+   (or (in-r2? word #"e$") (not (ends-with? word (pattern short-syllable "e"))))
+     (str/replace word #"e$" "")
+   (and (ends-with? word "ll") (in-r2? word #"l$"))
+     (str/replace word #"l$" "")))
+
 (defn stem [word]
   (-> word
       (str/replace #"^'" "")
@@ -135,4 +147,6 @@
       step-1c
       step-2
       step-3
-      step-4))
+      step-4
+      step-5
+      (str/replace "Y" "y")))
