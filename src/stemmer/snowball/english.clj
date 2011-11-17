@@ -118,6 +118,13 @@
     #"(ful|ness)$"     ""
     #"ative$"          #(if (in-r2? word #"ative$") "" %)))
 
+(defn step-4 [word]
+  (replace-longest-if in-r2? word
+    #"(al|ance|ence|er|ic|able|ible|ant|ement|ment|ent|ism|ate|iti|out|ive|ize)$"
+    ""
+    #"(?<=[st])ion"
+    ""))
+
 (defn stem [word]
   (-> word
       (str/replace #"^'" "")
@@ -127,4 +134,5 @@
       step-1b
       step-1c
       step-2
-      step-3))
+      step-3
+      step-4))
