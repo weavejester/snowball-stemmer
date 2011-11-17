@@ -16,18 +16,33 @@
 (defn ends-with? [s re]
   (re-find (pattern "(?:" re ")$") s))
 
-(defn in? [m1 m2]
-  (and (.find m1 0)
-       (.find m2 0)
-       (<= (.start m1) (.start m2))
-       (>= (.end m1) (.end m2))))
+(defn group [matcher n]
+  (if (.find matcher)
+    {:start  (.start matcher n)
+     :end    (.end matcher n)
+     :string (.group matcher n)}))
+
+(defn in-group? [group matcher]
+  (and group
+       (.find matcher 0)
+       (<= (:start group) (.start matcher))
+       (>= (:end group)   (.end matcher))))
 
 (defn r1 [word]
-  (-> (pattern "(?<=" vowel non-vowel ").*$")
-      (re-matcher word)))
+  (-> (pattern vowel non-vowel "(.*)$")
+      (re-matcher word)
+      (group 1)))
+
+(defn r2 [word]
+  (-> (pattern vowel non-vowel ".*?" vowel non-vowel "(.*)$")
+      (re-matcher word)
+      (group 1)))
 
 (defn in-r1? [word re]
-  (in? (r1 word) (re-matcher re word)))
+  (in-group? (r1 word) (re-matcher re word)))
+
+(defn in-r2? [word re]
+  (in-group? (r2 word) (re-matcher re word)))
 
 (def short-syllable
   (pattern
@@ -36,13 +51,15 @@
 
 (defn short? [word]
   (and (ends-with? word short-syllable)
-       (str/blank? (re-find (r1 word)))))
+       (str/blank? (:string (r1 word)))))
 
 (defn replace-longest-if [pred word & rules]
   (apply replace-longest word
     (mapcat
      (fn [[re replacement]]
-       [re #(if (in-r1? word re) replacement %)])
+       (if (fn? replacement)
+         [re #(if (pred word re) (replacement %) %)]
+         [re #(if (pred word re) replacement %)]))
      (partition 2 rules))))
 
 (defn step-0 [word]
@@ -92,6 +109,15 @@
     #"lessli$"              "less"
     #"(?<=[cdeghkmnrt])li$" ""))
 
+(defn step-3 [word]
+  (replace-longest-if in-r1? word
+    #"tional$"         "tion"
+    #"ational$"        "ate"
+    #"alize$"          "al"
+    #"ic(ate|iti|al)$" "ic"
+    #"(ful|ness)$"     ""
+    #"ative$"          #(if (in-r2? word #"ative$") "" %)))
+
 (defn stem [word]
   (-> word
       (str/replace #"^'" "")
@@ -100,4 +126,5 @@
       step-1a
       step-1b
       step-1c
-      step-2))
+      step-2
+      step-3))
