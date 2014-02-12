@@ -1,27 +1,30 @@
-# snowball-stemmer
+# Snowball-Stemmer
 
-Provides a simple wrapper around the tartarus.org Snowball stemmer.  
+Provides a simple wrapper around the tartarus.org Snowball stemmer.
 
-## Usage
+## Installation
 
-After you install it to your maven repo, you can 
-add it to your `project.clj`
+To install, add the following to your project `:dependencies`:
 
     [snowball-stemmer "0.1.0"]
 
-and then, you can use it in the `lein repl`
+## Usage
 
-
-    user=> (require '[stemmer.snowball :as sn])
-    user=> ((sn/stemmer :english) "mice")
-    "mice"
-    user=> ((sn/stemmer :english) "mices")
-    "mice"
-    user=> ((sn/stemmer :english) "turtles")
-    "turtl"
-    user=> ((sn/stemmer :english) "turtle")
-    "turtl"
+```clojure
+user=> (require '[stemmer.snowball :as sn])
+user=> ((sn/stemmer :english) "mice")
+"mice"
+user=> ((sn/stemmer :english) "mices")
+"mice"
+user=> ((sn/stemmer :english) "turtles")
+"turtl"
+user=> ((sn/stemmer :english) "turtle")
+"turtl"
+```
 
 ## License
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Copyright © 2014 James Reeves
+
+Distributed under the Eclipse Public License either version 1.0 or (at
+your option) any later version.
