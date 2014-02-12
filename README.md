@@ -11,14 +11,21 @@ To install, add the following to your project `:dependencies`:
 ## Usage
 
 ```clojure
-user=> (require '[stemmer.snowball :as sn])
-user=> ((sn/stemmer :english) "mice")
-"mice"
-user=> ((sn/stemmer :english) "mices")
-"mice"
-user=> ((sn/stemmer :english) "turtles")
+user=> (require '[stemmer.snowball :as snowball])
+nil
+user=> (def stemmer (snowball/stemmer :english))
+#'user/stemmer
+user=> (stemmer "probable")
+"probabl"
+user=> (stemmer "probably")
+"probabl"
+user=> (stemmer "loved")
+"love"
+user=> (stemmer "lovely")
+"love"
+user=> (stemmer "turtles")
 "turtl"
-user=> ((sn/stemmer :english) "turtle")
+user=> (stemmer "turtle")
 "turtl"
 ```
 
