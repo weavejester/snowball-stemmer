@@ -1,5 +1,5 @@
-(defproject snowball-stemmer "1.0.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :dependencies [[org.clojure/clojure "1.2.1"]]
-  :source-path "src/clj"
-  :java-source-path "src/java")
+(defproject snowball-stemmer "0.1.0"
+  :description "Provides simple wrapper for tartarus.org stemmer"
+  :dependencies [[org.clojure/clojure "1.5.1"]]
+  :source-paths ["src/clj"]
+  :java-source-paths ["src/java"])
