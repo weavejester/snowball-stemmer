@@ -2,11 +2,21 @@
 
 Provides a simple wrapper around the tartarus.org Snowball stemmer.
 
-## Installation
+## Getting started
 
-To install, add the following to your project `:dependencies`:
+Add the necessary dependency
 
-    [snowball-stemmer "0.1.0"]
+### `deps.edn`
+
+    snowball-stemmer/snowball-stemmer {:mvn/version "0.2.0"}
+
+## Building from source
+
+Build locally to .m2 repository
+
+    clj -T:build clean
+    clj -T:build jar
+    clj -T:build install
 
 ## Usage
 
