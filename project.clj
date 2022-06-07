@@ -1,4 +1,4 @@
-(defproject snowball-stemmer "0.1.0"
+(defproject snowball-stemmer "0.1.1"
   :description "Provides simple wrapper for tartarus.org stemmer"
   :url "https://github.com/weavejester/snowball-stemmer"
   :license {:name "The New BSD License"

@@ -6,7 +6,7 @@ Provides a simple wrapper around the tartarus.org Snowball stemmer.
 
 To install, add the following to your project `:dependencies`:
 
-    [snowball-stemmer "0.1.0"]
+    [snowball-stemmer "0.1.1"]
 
 ## Usage
 
